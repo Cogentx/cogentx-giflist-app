@@ -20,19 +20,34 @@
 
 <ion-content>
   <ion-list lines="none">
-    <div tappable>
+    <div
+      tappable
+      (click)="playVideo($event, post)"
+      *ngFor="let post of redditService.posts"
+    >
       <ion-item>
-        GIF GOES HERE
+        <video loop [poster]="post.data.snapshot" [src]="post.data.url"></video>
       </ion-item>
-      <ion-list-header>
-        <ion-label>TITLE GOES HERE</ion-label>
+      <ion-list-header style="text-align: left;" (click)="showComments(post)">
+        <ion-label>{{ post.data.title }}</ion-label>
       </ion-list-header>
     </div>
 
-    <ion-item *ngIf="redditService.loading" lines="none" style="text-align: center;">
+    <ion-item
+      *ngIf="redditService.loading"
+      lines="none"
+      style="text-align: center;"
+    >
       <ion-spinner name="lines-small"></ion-spinner>
     </ion-item>
   </ion-list>
 
-  <ion-button color="light" expand="full" (click)="loadMore()">Load More...</ion-button>
+  <ion-button
+    color="light"
+    expand="full"
+    *ngIf="redditService.posts.length"
+    (click)="loadMore()"
+  >
+    Load More...
+  </ion-button>
 </ion-content>
