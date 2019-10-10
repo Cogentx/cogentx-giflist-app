@@ -27,8 +27,13 @@ export class RedditService {
   }
 
   load(): void {
-    // this.dataService.getData();
-    this.fetchData();
+    this.dataService.getSettingsReddit()
+      .then(settings => {
+        if (!!settings) { // convert to boolean with `!!`
+          this.settings = settings;
+        }
+        this.fetchData();
+      });
   }
 
   fetchData(): void {
@@ -46,7 +51,7 @@ export class RedditService {
     this.http.get(url).pipe(
       // Modify the response to return data in a more friendly format
       map((res: any) => {
-        console.log(res);
+        
         let response = res.data.children;
         let validPosts = 0;
 
@@ -95,7 +100,6 @@ export class RedditService {
           this.after = res
             .data.children[res.data.children.length - 1]
             .data.name;
-          console.log(this.after);
         }
 
         return response;
@@ -103,15 +107,12 @@ export class RedditService {
     )
     .subscribe(
       (data: any) => {
-        console.log('data', data);
-
         // Add new posts we just pulled in to the existing posts
         this.posts.push(...data);
 
         // Keep fetching more GIFs if we didn't retrieve enough to fill a page
         // But give up after 50 tries if we still don't have enough
         if (this.moreCount > 50) {
-          console.log('giving up');
 
           // Time to give up
           this.moreCount = 0;
@@ -135,9 +136,20 @@ export class RedditService {
     );
   }
 
-  nextPage(): void {}
+  nextPage(): void {
+    this.page++;
+    this.fetchData();
+  }
 
-  resetPosts(): void {}
+  resetPosts(): void {
+    this.page = 1;
+    this.posts = [];
+    this.after = null;
+    this.fetchData();
+  }
 
-  changeSubReddit(subreddit): void {}
+  changeSubReddit(subreddit): void {
+    this.settings.subReddit = subreddit || 'gifs';
+    this.resetPosts();
+  }
 }

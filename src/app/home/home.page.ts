@@ -65,8 +65,8 @@ export class HomePage implements OnInit {
       // Show the loader gif
       video.play();
 
-      video.addEventListener('playing', () => {
-        console.log('playing video');
+      video.addEventListener('playing', (evt) => {
+        console.log('playing video', post, evt);
       });
     } else {
       video.pause();
