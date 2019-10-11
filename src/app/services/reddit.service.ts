@@ -51,7 +51,7 @@ export class RedditService {
     this.http.get(url).pipe(
       // Modify the response to return data in a more friendly format
       map((res: any) => {
-        
+
         let response = res.data.children;
         let validPosts = 0;
 
