@@ -29,7 +29,7 @@ export class RedditService {
   load(): void {
     this.dataService.getSettingsReddit()
       .then(settings => {
-        if (!!settings) { // convert to boolean with `!!`
+        if (settings !== null) { // or convert to boolean with `!!`
           this.settings = settings;
         }
         this.fetchData();
