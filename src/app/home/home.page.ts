@@ -54,7 +54,17 @@ export class HomePage implements OnInit {
     });
   }
 
-  openSettings(): void {}
+  openSettings(): void {
+    this.modalCtrl.create({
+      component: SettingsPage
+    })
+    .then(modal => {
+      modal.onDidDismiss().then(() => {
+        this.redditService.resetPosts();
+      });
+      modal.present();
+    });
+  }
 
   playVideo(e, post): void {
     // Create a reference to the video
@@ -65,8 +75,8 @@ export class HomePage implements OnInit {
       // Show the loader gif
       video.play();
 
-      video.addEventListener('playing', () => {
-        console.log('playing video');
+      video.addEventListener('playing', (evt) => {
+        console.log('playing video', post, evt);
       });
     } else {
       video.pause();
